@@ -1,18 +1,7 @@
 "use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import Input from "./Input";
 import { Button } from "./ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -25,27 +14,15 @@ import {
 import { customerSchema, customerSchemaType } from "@/lib/schema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertCustomer } from "@/lib/api";
-import { useAddCustomer, useCustomers } from "@/hooks/useCustomer";
-import { type Customer as CustomerType } from "@prisma/client";
-
-const TableHeadersContent = [
-  "Name",
-  "Contact",
-  "Status",
-  "Weight",
-  "Loads",
-  "Price",
-  "Date",
-  "Time",
-];
+import { useAddCustomer } from "@/hooks/useCustomer";
+import TableCustomers from "./TableCustomers";
 
 const Customer = () => {
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<customerSchemaType>({
     resolver: zodResolver(customerSchema),
@@ -61,8 +38,7 @@ const Customer = () => {
     reValidateMode: "onChange",
   });
 
-  const { mutate, isPending } = useAddCustomer();
-  const { data, isLoading } = useCustomers();
+  const { mutate } = useAddCustomer();
 
   const onSubmit = (data: customerSchemaType) => {
     mutate(data);
@@ -195,32 +171,7 @@ const Customer = () => {
         </CardContent>
       </Card>
 
-      <Table className="my-15">
-        <TableCaption>List of Customers for Today</TableCaption>
-        <TableHeader>
-          <TableRow>
-            {TableHeadersContent.map((t, index) => (
-              <TableHead className="text-center" key={index}>
-                {t}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.map((d: CustomerType) => (
-            <TableRow key={d.id}>
-              <TableCell className="text-center"> {d.name} </TableCell>
-              <TableCell className="text-center"> {d.phone} </TableCell>
-              <TableCell className="text-center"> {d.status} </TableCell>
-              <TableCell className="text-center"> {d.weight} </TableCell>
-              <TableCell className="text-center"> {d.loads} </TableCell>
-              <TableCell className="text-center"> {d.price} </TableCell>
-              <TableCell className="text-center"> Aug </TableCell>
-              <TableCell className="text-center"> 10:30 AM </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <TableCustomers />
     </div>
   );
 };
