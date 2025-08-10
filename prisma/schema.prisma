@@ -16,7 +16,7 @@ datasource db {
 
 enum Status{
   Waiting
-  InProcess
+  OnProcess
   Done
 }
 
