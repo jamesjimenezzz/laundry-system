@@ -26,15 +26,18 @@ import { customerSchema, customerSchemaType } from "@/lib/schema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertCustomer } from "@/lib/api";
-import { useAddCustomer } from "@/hooks/useCustomer";
+import { useAddCustomer, useCustomers } from "@/hooks/useCustomer";
+import { type Customer as CustomerType } from "@prisma/client";
 
 const TableHeadersContent = [
   "Name",
   "Contact",
   "Status",
+  "Weight",
+  "Loads",
+  "Price",
   "Date",
   "Time",
-  "Actions",
 ];
 
 const Customer = () => {
@@ -59,6 +62,7 @@ const Customer = () => {
   });
 
   const { mutate, isPending } = useAddCustomer();
+  const { data, isLoading } = useCustomers();
 
   const onSubmit = (data: customerSchemaType) => {
     mutate(data);
@@ -202,6 +206,20 @@ const Customer = () => {
             ))}
           </TableRow>
         </TableHeader>
+        <TableBody>
+          {data?.map((d: CustomerType) => (
+            <TableRow key={d.id}>
+              <TableCell className="text-center"> {d.name} </TableCell>
+              <TableCell className="text-center"> {d.phone} </TableCell>
+              <TableCell className="text-center"> {d.status} </TableCell>
+              <TableCell className="text-center"> {d.weight} </TableCell>
+              <TableCell className="text-center"> {d.loads} </TableCell>
+              <TableCell className="text-center"> {d.price} </TableCell>
+              <TableCell className="text-center"> Aug </TableCell>
+              <TableCell className="text-center"> 10:30 AM </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </div>
   );
