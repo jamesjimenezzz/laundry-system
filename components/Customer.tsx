@@ -73,6 +73,14 @@ const Customer = () => {
                 </Select>
               </div>
             </div>
+            <div className="flex flex-col gap-3">
+              <label className="font-semibold"> Weight </label>
+              <Input placeholder="Enter Weight" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <label className="font-semibold"> Loads </label>
+              <Input placeholder="Enter Loads" />
+            </div>
             <div className="col-span-2">
               <Button type="submit" className="w-full">
                 Add

@@ -14,3 +14,19 @@ datasource db {
   url   = env("DATABASE_URL")
 }
 
+enum Status{
+  Waiting
+  InProcess
+  Done
+}
+
+model Customer {
+  id  Int @id @default(autoincrement())
+  name  String
+  phone String
+  status  Status @default(Waiting)
+  weight Float
+  loads Int
+  price Int
+
+}
