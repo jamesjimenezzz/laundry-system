@@ -11,6 +11,7 @@ export const customerSchema = z.object({
   }),
   weight: z.number().positive("Weight must be > 0"),
   loads: z.number().int().min(1, "At least 1 load"),
+  price: z.number().int().min(1, "Atleast 1 pesos"),
 });
 
 export type customerSchemaType = z.infer<typeof customerSchema>;

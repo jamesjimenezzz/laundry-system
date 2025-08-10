@@ -25,6 +25,8 @@ import {
 import { customerSchema, customerSchemaType } from "@/lib/schema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { insertCustomer } from "@/lib/api";
+import { useAddCustomer } from "@/hooks/useCustomer";
 
 const TableHeadersContent = [
   "Name",
@@ -40,7 +42,7 @@ const Customer = () => {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitting },
     reset,
   } = useForm<customerSchemaType>({
     resolver: zodResolver(customerSchema),
@@ -50,12 +52,16 @@ const Customer = () => {
       status: "Waiting",
       weight: 0,
       loads: 0,
+      price: 0,
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
 
+  const { mutate, isPending } = useAddCustomer();
+
   const onSubmit = (data: customerSchemaType) => {
+    mutate(data);
     console.log(data);
     reset();
   };
@@ -97,7 +103,7 @@ const Customer = () => {
               )}
             </div>
 
-            <div className="col-span-2">
+            <div className="">
               <div className="flex flex-col gap-3">
                 <label className="font-semibold"> Initial Status </label>
                 <Controller
@@ -164,8 +170,20 @@ const Customer = () => {
                 <p className="text-sm text-red-500">{errors.loads.message}</p>
               )}
             </div>
+            <div className="flex flex-col gap-3">
+              <label className="font-semibold"> Price </label>
+              <input
+                type="number"
+                className="w-full outline rounded-lg px-3 py-1.5 bg-white"
+                placeholder="Enter Price"
+                {...register("price", { valueAsNumber: true })}
+              />
+              {errors.price && (
+                <p className="text-sm text-red-500">{errors.price.message}</p>
+              )}
+            </div>
             <div className="col-span-2">
-              <Button type="submit" className="w-full">
+              <Button disabled={isSubmitting} type="submit" className="w-full">
                 Add
               </Button>
             </div>

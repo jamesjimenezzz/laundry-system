@@ -21,12 +21,14 @@ enum Status{
 }
 
 model Customer {
-  id  Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name  String
   phone String
   status  Status @default(Waiting)
   weight Float
   loads Int
   price Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
 }
