@@ -2,10 +2,14 @@ import { insertCustomer, getCustomers } from "@/lib/api";
 import { customerSchemaType } from "@/lib/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function useCustomers() {
+export function useCustomers(params?: {
+  preset?: string;
+  start?: string;
+  end?: string;
+}) {
   return useQuery({
-    queryKey: ["customers"],
-    queryFn: getCustomers,
+    queryKey: ["customers", params],
+    queryFn: () => getCustomers(params),
   });
 }
 

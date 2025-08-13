@@ -23,7 +23,7 @@ const TableCustomers = () => {
     "Time",
   ];
 
-  const { data } = useCustomers();
+  const { data } = useCustomers({ start: "2025-08-08", end: "2025-08-11" });
 
   return (
     <Table className="my-15">
