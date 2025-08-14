@@ -34,6 +34,8 @@ export async function GET(req: Request) {
       where = {
         createdAt: { gte: startOf(today), lt: new Date(endOf(today)) },
       };
+    } else if (preset === "all") {
+      where = {};
     } else {
       // default current 7 days
       where = {
@@ -70,7 +72,6 @@ export async function POST(req: Request) {
         weight: body.weight,
         loads: body.loads,
         price: body.price,
-        createdAt: phNow(),
       },
     });
 
@@ -78,5 +79,16 @@ export async function POST(req: Request) {
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error: "Failed to create" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+
+    const customers = await prisma.customer.findId;
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ error: "Failed to delete" });
   }
 }

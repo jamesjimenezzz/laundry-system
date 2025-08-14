@@ -55,3 +55,21 @@ export async function deleteCustomer(id: string) {
     return null;
   }
 }
+
+export async function updateCustomer(id: string, payload: customerSchemaType) {
+  try {
+    const res = await fetch(`'api/customer${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ data: payload }),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch");
+    }
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

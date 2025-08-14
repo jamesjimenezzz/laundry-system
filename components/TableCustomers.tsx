@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,9 +11,40 @@ import {
 import { useCustomers } from "@/hooks/useCustomer";
 import { type Customer as CustomerType } from "@prisma/client";
 import { Trash } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { Check } from "lucide-react";
 import { useDeleteCustomer } from "@/hooks/useCustomer";
 
 const TableCustomers = () => {
+  const [editingId, setEditingId] = useState<null | string>(null);
+  const [dataEdit, setDataEdit] = useState<Partial<CustomerType>>({});
+
+  const handleEdit = (row: CustomerType) => {
+    setEditingId(row.id);
+    setDataEdit({
+      name: row.name,
+      phone: row.phone,
+      status: row.status,
+      weight: row.weight,
+      loads: row.loads,
+      price: row.price,
+    });
+  };
+
+  const saveEdit = () => {
+    const payload = {
+      id: editingId,
+      name: dataEdit.name ?? "",
+      phone: dataEdit.phone ?? "",
+      status: dataEdit.status as CustomerType["status"],
+      weight: Number(dataEdit.weight ?? 0),
+      loads: Number(dataEdit.loads ?? 0),
+      price: Number(dataEdit.price ?? 0),
+    };
+
+    setEditingId(null);
+  };
+
   const TableHeadersContent = [
     "Name",
     "Contact",
@@ -25,7 +56,7 @@ const TableCustomers = () => {
     "Time",
   ];
 
-  const { data } = useCustomers({ preset: "today" });
+  const { data } = useCustomers({ preset: "all" });
   const { mutate } = useDeleteCustomer();
 
   return (
@@ -43,12 +74,85 @@ const TableCustomers = () => {
       <TableBody>
         {data?.map((d: CustomerType) => (
           <TableRow key={d.id}>
-            <TableCell className="text-center"> {d.name} </TableCell>
-            <TableCell className="text-center"> {d.phone} </TableCell>
-            <TableCell className="text-center"> {d.status} </TableCell>
-            <TableCell className="text-center"> {d.weight} </TableCell>
-            <TableCell className="text-center"> {d.loads} </TableCell>
-            <TableCell className="text-center"> {d.price} </TableCell>
+            {editingId !== d.id ? (
+              <>
+                <TableCell className="text-center"> {d.name} </TableCell>
+                <TableCell className="text-center"> {d.phone} </TableCell>
+                <TableCell className="text-center"> {d.status} </TableCell>
+                <TableCell className="text-center"> {d.weight} </TableCell>
+                <TableCell className="text-center"> {d.loads} </TableCell>
+                <TableCell className="text-center"> {d.price} </TableCell>
+              </>
+            ) : (
+              <>
+                <TableCell className="text-center p-0">
+                  {" "}
+                  <input
+                    className="outline text-center "
+                    defaultValue={d.name}
+                    onChange={(e) =>
+                      setDataEdit((s) => ({ ...s, name: e.target.value }))
+                    }
+                    type="text"
+                  />{" "}
+                </TableCell>
+                <TableCell className="text-center">
+                  {" "}
+                  <input
+                    className="outline text-center "
+                    defaultValue={d.phone}
+                    onChange={(e) =>
+                      setDataEdit((s) => ({ ...s, phone: e.target.value }))
+                    }
+                    type="text"
+                  />{" "}
+                </TableCell>
+                <TableCell className="text-center"> editing </TableCell>
+                <TableCell className="text-center">
+                  {" "}
+                  <input
+                    className="outline text-center "
+                    defaultValue={d.weight}
+                    onChange={(e) =>
+                      setDataEdit((s) => ({
+                        ...s,
+                        weight: Number(e.target.value),
+                      }))
+                    }
+                    type="number"
+                  />{" "}
+                </TableCell>
+                <TableCell className="text-center">
+                  {" "}
+                  <input
+                    className="outline text-center "
+                    defaultValue={d.loads}
+                    onChange={(e) =>
+                      setDataEdit((s) => ({
+                        ...s,
+                        loads: Number(e.target.value),
+                      }))
+                    }
+                    type="number"
+                  />{" "}
+                </TableCell>
+                <TableCell className="text-center">
+                  {" "}
+                  <input
+                    className="outline text-center "
+                    defaultValue={d.price}
+                    onChange={(e) =>
+                      setDataEdit((s) => ({
+                        ...s,
+                        price: Number(e.target.value),
+                      }))
+                    }
+                    type="number"
+                  />{" "}
+                </TableCell>
+              </>
+            )}
+
             <TableCell className="text-center">
               {" "}
               {new Date(d.createdAt).toLocaleDateString("en-US", {
@@ -70,6 +174,21 @@ const TableCustomers = () => {
                 onClick={() => mutate(d.id)}
                 size={18}
               />
+            </TableCell>
+            <TableCell>
+              {editingId !== d.id ? (
+                <Pencil
+                  className="cursor-pointer"
+                  onClick={() => handleEdit(d)}
+                  size={18}
+                />
+              ) : (
+                <Check
+                  className="cursor-pointer"
+                  size={18}
+                  onClick={() => saveEdit()}
+                />
+              )}
             </TableCell>
           </TableRow>
         ))}
