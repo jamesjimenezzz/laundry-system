@@ -39,3 +39,19 @@ export async function insertCustomer(data: customerSchemaType) {
     return null;
   }
 }
+
+export async function deleteCustomer(id: string) {
+  try {
+    const res = await fetch(`/api/customers/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to delete");
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

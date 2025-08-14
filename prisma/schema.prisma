@@ -28,7 +28,7 @@ model Customer {
   weight Float
   loads Int
   price Int
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamp(6) //no timezone
   updatedAt DateTime @updatedAt
 
 }

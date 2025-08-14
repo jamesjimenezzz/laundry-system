@@ -1,6 +1,13 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+function phNow() {
+  // Lumikha ng ISO string na naka-PH time
+  const now = new Date();
+  now.setHours(now.getHours() + 8 - now.getTimezoneOffset() / 60);
+  return now;
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const preset = searchParams.get("preset");
@@ -63,6 +70,7 @@ export async function POST(req: Request) {
         weight: body.weight,
         loads: body.loads,
         price: body.price,
+        createdAt: phNow(),
       },
     });
 

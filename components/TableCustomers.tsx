@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/table";
 import { useCustomers } from "@/hooks/useCustomer";
 import { type Customer as CustomerType } from "@prisma/client";
+import { Trash } from "lucide-react";
+import { useDeleteCustomer } from "@/hooks/useCustomer";
 
 const TableCustomers = () => {
   const TableHeadersContent = [
@@ -23,7 +25,8 @@ const TableCustomers = () => {
     "Time",
   ];
 
-  const { data } = useCustomers({ start: "2025-08-08", end: "2025-08-11" });
+  const { data } = useCustomers({ preset: "today" });
+  const { mutate } = useDeleteCustomer();
 
   return (
     <Table className="my-15">
@@ -60,6 +63,13 @@ const TableCustomers = () => {
                 hour: "2-digit",
                 minute: "2-digit",
               })}{" "}
+            </TableCell>
+            <TableCell>
+              <Trash
+                className="cursor-pointer"
+                onClick={() => mutate(d.id)}
+                size={18}
+              />
             </TableCell>
           </TableRow>
         ))}

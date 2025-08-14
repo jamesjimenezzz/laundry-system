@@ -1,4 +1,4 @@
-import { insertCustomer, getCustomers } from "@/lib/api";
+import { insertCustomer, getCustomers, deleteCustomer } from "@/lib/api";
 import { customerSchemaType } from "@/lib/schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -18,6 +18,17 @@ export function useAddCustomer() {
 
   return useMutation({
     mutationFn: (data: customerSchemaType) => insertCustomer(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["customers"] });
+    },
+  });
+}
+
+export function useDeleteCustomer() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deleteCustomer(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["customers"] });
     },
