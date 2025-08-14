@@ -58,9 +58,9 @@ export async function deleteCustomer(id: string) {
 
 export async function updateCustomer(id: string, payload: customerSchemaType) {
   try {
-    const res = await fetch(`'api/customer${id}`, {
+    const res = await fetch(`api/customers/${id}`, {
       method: "PATCH",
-      body: JSON.stringify({ data: payload }),
+      body: JSON.stringify(payload),
     });
     if (!res.ok) {
       throw new Error("Failed to fetch");

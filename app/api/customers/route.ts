@@ -81,14 +81,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to create" }, { status: 500 });
   }
 }
-
-export async function DELETE(req: Request) {
-  try {
-    const body = await req.json();
-
-    const customers = await prisma.customer.findId;
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Failed to delete" });
-  }
-}

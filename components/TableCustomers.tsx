@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCustomers } from "@/hooks/useCustomer";
+import { useCustomers, useUpdateCustomer } from "@/hooks/useCustomer";
 import { type Customer as CustomerType } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
@@ -18,6 +18,7 @@ import { useDeleteCustomer } from "@/hooks/useCustomer";
 const TableCustomers = () => {
   const [editingId, setEditingId] = useState<null | string>(null);
   const [dataEdit, setDataEdit] = useState<Partial<CustomerType>>({});
+  const { mutate: update, isPending } = useUpdateCustomer();
 
   const handleEdit = (row: CustomerType) => {
     setEditingId(row.id);
@@ -32,6 +33,10 @@ const TableCustomers = () => {
   };
 
   const saveEdit = () => {
+    if (!editingId) {
+      return;
+    }
+
     const payload = {
       id: editingId,
       name: dataEdit.name ?? "",
@@ -41,6 +46,8 @@ const TableCustomers = () => {
       loads: Number(dataEdit.loads ?? 0),
       price: Number(dataEdit.price ?? 0),
     };
+
+    update({ id: editingId, payload });
 
     setEditingId(null);
   };
