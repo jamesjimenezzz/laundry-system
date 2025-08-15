@@ -17,23 +17,40 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useCustomers } from "@/hooks/useCustomer";
+import { Customer } from "@prisma/client";
 
 export const description = "A line chart with a label";
 
-const getLastSevenDays = () => {
+const useLastSevenDays = () => {
   const today = new Date();
-  const days = [];
+  const { data: customers } = useCustomers();
 
-  for (let i = 6; i >= 0; i--) {
+  return Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
-    d.setDate(today.getDate() - i);
-    days.push({
-      date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      desktop: Math.floor(Math.random() * 300) + 50,
-      mobile: Math.floor(Math.random() * 300) + 50,
+    d.setDate(today.getDate() - (6 - i));
+
+    const dateStr = d.toISOString().split("T")[0];
+
+    const customersForDay = customers?.filter((c: Customer) => {
+      const createdDate = new Date(c.createdAt).toISOString().split("T")[0];
+      return createdDate === dateStr;
     });
-  }
-  return days;
+
+    const totalLoads = customersForDay?.reduce(
+      (sum: number, c: Customer) => sum + c.loads,
+      0
+    );
+
+    return {
+      date: d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      customers: customersForDay?.length,
+      loads: totalLoads,
+    };
+  });
 };
 
 const chartConfig = {
@@ -47,16 +64,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const dateData = getLastSevenDays();
-
 const ChartLineLabel = () => {
+  const dateData = useLastSevenDays();
   const startDate = dateData[0].date;
   const endDate = dateData[dateData.length - 1].date;
 
   return (
     <Card className="max-w-xl">
       <CardHeader>
-        <CardTitle>Line Chart - Label</CardTitle>
+        <CardTitle>Diko alam tatawag</CardTitle>
         <CardDescription>
           {startDate} - {endDate}
         </CardDescription>
@@ -85,7 +101,7 @@ const ChartLineLabel = () => {
               content={<ChartTooltipContent indicator="line" />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="customers"
               type="natural"
               stroke="var(--color-desktop)"
               strokeWidth={2}
@@ -103,15 +119,34 @@ const ChartLineLabel = () => {
                 fontSize={12}
               />
             </Line>
+            <Line
+              dataKey="loads"
+              type="natural"
+              stroke="var(--color-mobile)"
+              strokeWidth={2}
+              dot={{
+                fill: "var(--color-mobile)",
+              }}
+              activeDot={{
+                r: 6,
+              }}
+            >
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Line>
           </LineChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Current 7 days
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Analyze dito erp
         </div>
       </CardFooter>
     </Card>
