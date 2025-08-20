@@ -9,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DateRange, rangeContainsDayOfWeek } from "react-day-picker";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
+import { Calendar as CalendarIcon, Filter } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -23,8 +23,8 @@ import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Check } from "lucide-react";
 import { useDeleteCustomer } from "@/hooks/useCustomer";
-import SimpleDateRange from "./ui/simpledaterange";
 import { Button } from "./ui/button";
+import AllCustomersHeading from "./ui/customersheading";
 
 const AllCustomers = () => {
   const [editingId, setEditingId] = useState<null | string>(null);
@@ -113,11 +113,15 @@ const AllCustomers = () => {
 
   return (
     <>
+      <AllCustomersHeading />
       <div>
-        <p className="text-sm my-2">Select Date Range</p>
+        <div className=" flex font-semibold gap-2 my-2">
+          <Filter size={20} />
+          Filter Dates
+        </div>
         <Popover>
           <PopoverTrigger asChild>
-            <Button>
+            <Button className="bg-[#5995F7]">
               <CalendarIcon />
               {!range ? (
                 "No selected dates"
@@ -167,7 +171,7 @@ const AllCustomers = () => {
         </Popover>
       </div>
 
-      <Table className="my-15">
+      <Table className="my-5">
         <TableCaption>List of Customers for Today</TableCaption>
         <TableHeader>
           <TableRow>

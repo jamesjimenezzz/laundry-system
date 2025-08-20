@@ -14,6 +14,7 @@ import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Check } from "lucide-react";
 import { useDeleteCustomer } from "@/hooks/useCustomer";
+import { Search } from "lucide-react";
 
 const TableCustomers = () => {
   const [editingId, setEditingId] = useState<null | string>(null);
@@ -67,140 +68,155 @@ const TableCustomers = () => {
   const { mutate } = useDeleteCustomer();
 
   return (
-    <Table className="my-15">
-      <TableCaption>List of Customers for Today</TableCaption>
-      <TableHeader>
-        <TableRow>
-          {TableHeadersContent.map((t, index) => (
-            <TableHead className="text-center" key={index}>
-              {t}
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data?.map((d: CustomerType) => (
-          <TableRow key={d.id}>
-            {editingId !== d.id ? (
-              <>
-                <TableCell className="text-center"> {d.name} </TableCell>
-                <TableCell className="text-center"> {d.phone} </TableCell>
-                <TableCell className="text-center"> {d.status} </TableCell>
-                <TableCell className="text-center"> {d.weight} </TableCell>
-                <TableCell className="text-center"> {d.loads} </TableCell>
-                <TableCell className="text-center"> {d.price} </TableCell>
-              </>
-            ) : (
-              <>
-                <TableCell className="text-center p-0">
-                  {" "}
-                  <input
-                    className="outline text-center "
-                    defaultValue={d.name}
-                    onChange={(e) =>
-                      setDataEdit((s) => ({ ...s, name: e.target.value }))
-                    }
-                    type="text"
-                  />{" "}
-                </TableCell>
-                <TableCell className="text-center">
-                  {" "}
-                  <input
-                    className="outline text-center "
-                    defaultValue={d.phone}
-                    onChange={(e) =>
-                      setDataEdit((s) => ({ ...s, phone: e.target.value }))
-                    }
-                    type="text"
-                  />{" "}
-                </TableCell>
-                <TableCell className="text-center"> editing </TableCell>
-                <TableCell className="text-center">
-                  {" "}
-                  <input
-                    className="outline text-center "
-                    defaultValue={d.weight}
-                    onChange={(e) =>
-                      setDataEdit((s) => ({
-                        ...s,
-                        weight: Number(e.target.value),
-                      }))
-                    }
-                    type="number"
-                  />{" "}
-                </TableCell>
-                <TableCell className="text-center">
-                  {" "}
-                  <input
-                    className="outline text-center "
-                    defaultValue={d.loads}
-                    onChange={(e) =>
-                      setDataEdit((s) => ({
-                        ...s,
-                        loads: Number(e.target.value),
-                      }))
-                    }
-                    type="number"
-                  />{" "}
-                </TableCell>
-                <TableCell className="text-center">
-                  {" "}
-                  <input
-                    className="outline text-center "
-                    defaultValue={d.price}
-                    onChange={(e) =>
-                      setDataEdit((s) => ({
-                        ...s,
-                        price: Number(e.target.value),
-                      }))
-                    }
-                    type="number"
-                  />{" "}
-                </TableCell>
-              </>
-            )}
-
-            <TableCell className="text-center">
-              {" "}
-              {new Date(d.createdAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })}{" "}
-            </TableCell>
-            <TableCell className="text-center">
-              {" "}
-              {new Date(d.createdAt).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}{" "}
-            </TableCell>
-            <TableCell>
-              <Trash
-                className="cursor-pointer"
-                onClick={() => mutate(d.id)}
-                size={18}
-              />
-            </TableCell>
-            <TableCell>
-              {editingId !== d.id ? (
-                <Pencil
-                  className="cursor-pointer"
-                  onClick={() => handleEdit(d)}
-                  size={18}
-                />
-              ) : (
-                <Check
-                  className="cursor-pointer"
-                  size={18}
-                  onClick={() => saveEdit()}
-                />
-              )}
-            </TableCell>
+    <>
+      <div className="mt-15 mb-2">
+        <p className="font-semibold">Today's Customers</p>
+        <div className="relative">
+          <Search
+            className=" absolute ml-3  bottom-2 text-muted-foreground"
+            size={15}
+          />
+          <input
+            className="bg-white w-full outline-gray-200 outline text-sm pl-8 rounded-lg py-1.5"
+            type="text"
+          />
+        </div>
+      </div>
+      <Table className="">
+        <TableCaption>List of Customers for Today</TableCaption>
+        <TableHeader>
+          <TableRow>
+            {TableHeadersContent.map((t, index) => (
+              <TableHead className="text-center" key={index}>
+                {t}
+              </TableHead>
+            ))}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {data?.map((d: CustomerType) => (
+            <TableRow key={d.id}>
+              {editingId !== d.id ? (
+                <>
+                  <TableCell className="text-center"> {d.name} </TableCell>
+                  <TableCell className="text-center"> {d.phone} </TableCell>
+                  <TableCell className="text-center"> {d.status} </TableCell>
+                  <TableCell className="text-center"> {d.weight} </TableCell>
+                  <TableCell className="text-center"> {d.loads} </TableCell>
+                  <TableCell className="text-center"> {d.price} </TableCell>
+                </>
+              ) : (
+                <>
+                  <TableCell className="text-center p-0">
+                    {" "}
+                    <input
+                      className="outline text-center "
+                      defaultValue={d.name}
+                      onChange={(e) =>
+                        setDataEdit((s) => ({ ...s, name: e.target.value }))
+                      }
+                      type="text"
+                    />{" "}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {" "}
+                    <input
+                      className="outline text-center "
+                      defaultValue={d.phone}
+                      onChange={(e) =>
+                        setDataEdit((s) => ({ ...s, phone: e.target.value }))
+                      }
+                      type="text"
+                    />{" "}
+                  </TableCell>
+                  <TableCell className="text-center"> editing </TableCell>
+                  <TableCell className="text-center">
+                    {" "}
+                    <input
+                      className="outline text-center "
+                      defaultValue={d.weight}
+                      onChange={(e) =>
+                        setDataEdit((s) => ({
+                          ...s,
+                          weight: Number(e.target.value),
+                        }))
+                      }
+                      type="number"
+                    />{" "}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {" "}
+                    <input
+                      className="outline text-center "
+                      defaultValue={d.loads}
+                      onChange={(e) =>
+                        setDataEdit((s) => ({
+                          ...s,
+                          loads: Number(e.target.value),
+                        }))
+                      }
+                      type="number"
+                    />{" "}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {" "}
+                    <input
+                      className="outline text-center "
+                      defaultValue={d.price}
+                      onChange={(e) =>
+                        setDataEdit((s) => ({
+                          ...s,
+                          price: Number(e.target.value),
+                        }))
+                      }
+                      type="number"
+                    />{" "}
+                  </TableCell>
+                </>
+              )}
+
+              <TableCell className="text-center">
+                {" "}
+                {new Date(d.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}{" "}
+              </TableCell>
+              <TableCell className="text-center">
+                {" "}
+                {new Date(d.createdAt).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}{" "}
+              </TableCell>
+              <TableCell>
+                <Trash
+                  className="cursor-pointer"
+                  onClick={() => mutate(d.id)}
+                  size={18}
+                />
+              </TableCell>
+              <TableCell>
+                {editingId !== d.id ? (
+                  <Pencil
+                    className="cursor-pointer"
+                    onClick={() => handleEdit(d)}
+                    size={18}
+                  />
+                ) : (
+                  <Check
+                    className="cursor-pointer"
+                    size={18}
+                    onClick={() => saveEdit()}
+                  />
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 };
 

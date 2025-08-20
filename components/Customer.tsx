@@ -16,6 +16,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddCustomer } from "@/hooks/useCustomer";
 import TableCustomers from "./TableCustomers";
+import { Users } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 
 const Customer = () => {
   const {
@@ -47,10 +49,15 @@ const Customer = () => {
   };
 
   return (
-    <div className="">
+    <div className="mb-20">
       <Card className="">
         <CardHeader>
-          <CardTitle>Add New Customer</CardTitle>
+          <CardTitle className="text-xl flex gap-3.5">
+            <div className="bg-blue-200 rounded-md p-1.5">
+              <Users className="text-blue-500" size={20} />
+            </div>{" "}
+            Add New Customer
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -60,7 +67,7 @@ const Customer = () => {
             <div className="flex flex-col gap-3">
               <label className="font-semibold"> Customer Name </label>
               <input
-                className="w-full outline rounded-lg px-3 py-1.5 bg-white"
+                className="w-full outline outline-gray-200 rounded-lg px-3 py-1.5 bg-white"
                 type="text"
                 placeholder="Enter Customer Name"
                 {...register("name")}
@@ -73,7 +80,7 @@ const Customer = () => {
             <div className="flex flex-col gap-3">
               <label className="font-semibold"> Customer Phone Number </label>
               <input
-                className="w-full outline rounded-lg px-3 py-1.5 bg-white"
+                className="w-full outline outline-gray-200 rounded-lg px-3 py-1.5 bg-white"
                 type="text"
                 placeholder="Enter Phone Number"
                 {...register("phone")}
@@ -128,7 +135,7 @@ const Customer = () => {
             <div className="flex flex-col gap-3">
               <label className="font-semibold"> Weight </label>
               <input
-                className="w-full outline rounded-lg px-3 py-1.5 bg-white"
+                className="w-full outline-gray-200 outline rounded-lg px-3 py-1.5 bg-white"
                 type="number"
                 placeholder="Enter Weight"
                 {...register("weight", { valueAsNumber: true })}
@@ -142,7 +149,7 @@ const Customer = () => {
               <label className="font-semibold"> Loads </label>
               <input
                 type="number"
-                className="w-full outline rounded-lg px-3 py-1.5 bg-white"
+                className="w-full outline rounded-lg outline-gray-200 px-3 py-1.5 bg-white"
                 placeholder="Enter Loads"
                 {...register("loads", { valueAsNumber: true })}
               />
@@ -154,7 +161,7 @@ const Customer = () => {
               <label className="font-semibold"> Price </label>
               <input
                 type="number"
-                className="w-full outline rounded-lg px-3 py-1.5 bg-white"
+                className="w-full outline rounded-lg outline-gray-200 px-3 py-1.5 bg-white"
                 placeholder="Enter Price"
                 {...register("price", { valueAsNumber: true })}
               />
@@ -163,8 +170,12 @@ const Customer = () => {
               )}
             </div>
             <div className="col-span-2">
-              <Button disabled={isSubmitting} type="submit" className="w-full">
-                Add
+              <Button
+                disabled={isSubmitting}
+                type="submit"
+                className="w-full bg-[#5995F7]"
+              >
+                <CirclePlus /> Add Customer
               </Button>
             </div>
           </form>
