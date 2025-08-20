@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCustomers, useUpdateCustomer } from "@/hooks/useCustomer";
-import { type Customer as CustomerType } from "@prisma/client";
+import { Customer, type Customer as CustomerType } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Check } from "lucide-react";
@@ -20,6 +20,7 @@ const TableCustomers = () => {
   const [editingId, setEditingId] = useState<null | string>(null);
   const [dataEdit, setDataEdit] = useState<Partial<CustomerType>>({});
   const { mutate: update, isPending } = useUpdateCustomer();
+  const [query, setQuery] = useState("");
 
   const handleEdit = (row: CustomerType) => {
     setEditingId(row.id);
@@ -67,6 +68,10 @@ const TableCustomers = () => {
   const { data } = useCustomers({ preset: "today" });
   const { mutate } = useDeleteCustomer();
 
+  const results = data?.filter((d: Customer) =>
+    d.name.toLowerCase().includes(query.toLocaleLowerCase())
+  );
+
   return (
     <>
       <div className="mt-15 mb-2">
@@ -77,6 +82,8 @@ const TableCustomers = () => {
             size={15}
           />
           <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             className="bg-white w-full outline-gray-200 outline text-sm pl-8 rounded-lg py-1.5"
             type="text"
           />
@@ -94,7 +101,7 @@ const TableCustomers = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((d: CustomerType) => (
+          {results?.map((d: CustomerType) => (
             <TableRow key={d.id}>
               {editingId !== d.id ? (
                 <>

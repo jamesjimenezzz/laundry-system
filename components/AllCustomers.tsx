@@ -18,19 +18,21 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useCustomers, useUpdateCustomer } from "@/hooks/useCustomer";
-import { type Customer as CustomerType } from "@prisma/client";
+import { Customer, type Customer as CustomerType } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Check } from "lucide-react";
 import { useDeleteCustomer } from "@/hooks/useCustomer";
 import { Button } from "./ui/button";
 import AllCustomersHeading from "./ui/customersheading";
+import Input from "./ui/input";
 
 const AllCustomers = () => {
   const [editingId, setEditingId] = useState<null | string>(null);
   const [dataEdit, setDataEdit] = useState<Partial<CustomerType>>({});
   const { mutate: update, isPending } = useUpdateCustomer();
   const [range, setRange] = useState<DateRange | undefined>();
+  const [query, setQuery] = useState("");
 
   const handleToday = () => {
     const today = new Date();
@@ -107,9 +109,12 @@ const AllCustomers = () => {
   );
 
   const { mutate } = useDeleteCustomer();
-
   console.log(range?.from?.toISOString());
   console.log(range?.to?.toISOString());
+
+  const result = data?.filter((d: Customer) =>
+    d.name.toLowerCase().includes(query.toLowerCase())
+  );
 
   return (
     <>
@@ -119,56 +124,59 @@ const AllCustomers = () => {
           <Filter size={20} />
           Filter Dates
         </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button className="bg-[#5995F7]">
-              <CalendarIcon />
-              {!range ? (
-                "No selected dates"
-              ) : (
-                <div className="flex gap-2 text-sm ">
-                  <p>
-                    {range?.from?.toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "2-digit",
-                      year: "numeric",
-                    }) || "No selected date"}
-                  </p>
-                  <p>-</p>
-                  <p>
-                    {range?.to?.toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
-                  </p>
+        <div className="flex items-center gap-5">
+          <Input className="" query={query} setQuery={setQuery} />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button className="bg-[#5995F7] ">
+                <CalendarIcon />
+                {!range ? (
+                  "No selected dates"
+                ) : (
+                  <div className="flex gap-2 text-sm ">
+                    <p>
+                      {range?.from?.toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "2-digit",
+                        year: "numeric",
+                      }) || "No selected date"}
+                    </p>
+                    <p>-</p>
+                    <p>
+                      {range?.to?.toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "2-digit",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="flex">
+                {/* Picker  */}
+                <Calendar
+                  mode="range"
+                  numberOfMonths={1}
+                  selected={range}
+                  onSelect={setRange}
+                />
+                <div className="w-full flex flex-col gap-3 text-center">
+                  <Button onClick={handleToday} className="cursor-pointer">
+                    Today
+                  </Button>
+                  <Button onClick={handle7Days} className="cursor-pointer">
+                    Last 7 days
+                  </Button>
+                  <Button onClick={handle30Days} className="cursor-pointer">
+                    Last 30 days
+                  </Button>
                 </div>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="flex">
-              {/* Picker  */}
-              <Calendar
-                mode="range"
-                numberOfMonths={1}
-                selected={range}
-                onSelect={setRange}
-              />
-              <div className="w-full flex flex-col gap-3 text-center">
-                <Button onClick={handleToday} className="cursor-pointer">
-                  Today
-                </Button>
-                <Button onClick={handle7Days} className="cursor-pointer">
-                  Last 7 days
-                </Button>
-                <Button onClick={handle30Days} className="cursor-pointer">
-                  Last 30 days
-                </Button>
               </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       <Table className="my-5">
@@ -183,7 +191,7 @@ const AllCustomers = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((d: CustomerType) => (
+          {result?.map((d: CustomerType) => (
             <TableRow key={d.id}>
               {editingId !== d.id ? (
                 <>
