@@ -65,9 +65,12 @@ const Customer = () => {
             className="grid grid-cols-2 gap-5"
           >
             <div className="flex flex-col gap-3">
-              <label className="font-semibold"> Customer Name </label>
+              <label className="font-semibold text-[#344256]">
+                {" "}
+                Customer Name{" "}
+              </label>
               <input
-                className="w-full outline outline-gray-200 rounded-lg px-3 py-1.5 bg-white"
+                className="w-full outline  outline-gray-200 rounded-lg px-3 py-1.5 bg-white"
                 type="text"
                 placeholder="Enter Customer Name"
                 {...register("name")}
@@ -78,7 +81,10 @@ const Customer = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <label className="font-semibold"> Customer Phone Number </label>
+              <label className="font-semibold text-[#344256] ">
+                {" "}
+                Customer Phone Number{" "}
+              </label>
               <input
                 className="w-full outline outline-gray-200 rounded-lg px-3 py-1.5 bg-white"
                 type="text"
@@ -92,7 +98,10 @@ const Customer = () => {
 
             <div className="">
               <div className="flex flex-col gap-3">
-                <label className="font-semibold"> Initial Status </label>
+                <label className="font-semibold text-[#344256]">
+                  {" "}
+                  Initial Status{" "}
+                </label>
                 <Controller
                   name="status"
                   control={control}
@@ -133,7 +142,7 @@ const Customer = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <label className="font-semibold"> Weight </label>
+              <label className="font-semibold text-[#344256]"> Weight </label>
               <input
                 className="w-full outline-gray-200 outline rounded-lg px-3 py-1.5 bg-white"
                 type="number"
@@ -146,7 +155,7 @@ const Customer = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <label className="font-semibold"> Loads </label>
+              <label className="font-semibold text-[#344256]"> Loads </label>
               <input
                 type="number"
                 className="w-full outline rounded-lg outline-gray-200 px-3 py-1.5 bg-white"
@@ -158,7 +167,7 @@ const Customer = () => {
               )}
             </div>
             <div className="flex flex-col gap-3">
-              <label className="font-semibold"> Price </label>
+              <label className="font-semibold text-[#344256]"> Price </label>
               <input
                 type="number"
                 className="w-full outline rounded-lg outline-gray-200 px-3 py-1.5 bg-white"

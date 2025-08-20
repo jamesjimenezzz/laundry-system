@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import localFont from "next/font/local";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,6 +12,16 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const myFont = localFont({
+  src: "../fonts/oddlini-regular.ttf", // nasa public/fonts
+  display: "swap",
+});
+
+const poppinsFont = Poppins({
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppinsFont.className} ${geistMono.variable} antialiased`}
       >
         <Providers>{children}</Providers>
       </body>
