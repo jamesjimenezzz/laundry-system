@@ -63,7 +63,7 @@ const TableCustomers = () => {
     "Time",
   ];
 
-  const { data } = useCustomers({ preset: "all" });
+  const { data } = useCustomers({ preset: "today" });
   const { mutate } = useDeleteCustomer();
 
   return (

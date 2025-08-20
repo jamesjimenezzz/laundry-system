@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Dashboard from "@/components/Dashboard";
 import Customer from "@/components/Customer";
 import Analytics from "@/components/Analytics";
+import AllCustomers from "@/components/AllCustomers";
 
 const Home = () => {
   return (
@@ -20,6 +21,9 @@ const Home = () => {
           </TabsContent>
           <TabsContent value="customer-entry">
             <Customer />
+          </TabsContent>
+          <TabsContent value="customer-all">
+            <AllCustomers />
           </TabsContent>
           <TabsContent value="analytics">
             <Analytics />

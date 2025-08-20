@@ -1,62 +1,53 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-
-function phNow() {
-  // Lumikha ng ISO string na naka-PH time
-  const now = new Date();
-  now.setHours(now.getHours() + 8 - now.getTimezoneOffset() / 60);
-  return now;
-}
+import { startOfDay, endOfDay } from "date-fns";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
+
   const preset = searchParams.get("preset");
   const start = searchParams.get("start");
   const end = searchParams.get("end");
 
-  const startOf = (s: string) => new Date(`${s}T00:00:00.000`);
-  const nextDay = (s: string) =>
-    new Date(`${s}T00:00:00.000Z`).getTime() + 86400000;
-  const endOf = (s: string) => new Date(`${s}T23:59:59.999`);
-  const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  const startDt = new Date(Date.now() - 6 * 86400000); // 7 days inclusive
-  const startStr = startDt.toISOString().slice(0, 10);
+  const today = new Date();
+  const startDay = new Date(today.setHours(0, 0, 0, 0));
+  const endDay = new Date(today.setHours(23, 59, 59, 999));
+  const sevenDaysRange = new Date();
+  sevenDaysRange.setDate(today.getDate() - 6);
+  sevenDaysRange.setHours(0, 0, 0, 0);
+  const startFixed = startOfDay(start!);
+  const endFixed = endOfDay(end!);
 
-  let where: any = {};
+  let where = {};
 
   try {
     if (start && end) {
       where = {
-        createdAt: { gte: startOf(start), lt: new Date(endOf(end)) },
+        createdAt: { gte: new Date(startFixed), lte: new Date(endFixed) },
+      };
+    } else if (preset === "7days") {
+      where = {
+        createdAt: { gte: sevenDaysRange, lt: endDay },
       };
     } else if (preset === "today") {
-      const today = new Date().toISOString().slice(0, 10);
       where = {
-        createdAt: { gte: startOf(today), lt: new Date(endOf(today)) },
+        createdAt: { gte: startDay, lt: endDay },
       };
-    } else if (preset === "all") {
-      where = {};
     } else {
-      // default current 7 days
-      where = {
-        createdAt: {
-          gte: startOf(startStr),
-          lte: endOf(todayStr),
-        },
-      };
+      where = {};
     }
 
-    const customer = await prisma.customer.findMany({
+    const customers = await prisma.customer.findMany({
       where,
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    return NextResponse.json(customer);
+    return NextResponse.json(customers);
   } catch (error) {
     console.log(error);
-    return null;
+    return NextResponse.json({ error: "Failed to GET request" });
   }
 }
 
