@@ -2,6 +2,7 @@
 
 import { TrendingUp } from "lucide-react";
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts";
+import { Customer as CustomerType } from "@prisma/client";
 
 import {
   Card,
@@ -28,17 +29,17 @@ const useLastSevenDays = () => {
 
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
+    d.setHours(0, 0, 0, 0);
     d.setDate(today.getDate() - (6 - i));
 
-    const dateStr = d.toISOString().split("T")[0];
-
-    const customersForDay = customers?.filter((c: Customer) => {
-      const createdDate = new Date(c.createdAt).toISOString().split("T")[0];
-      return createdDate === dateStr;
+    const customersForDay = customers?.filter((c: CustomerType) => {
+      const created = new Date(c.createdAt);
+      created.setHours(0, 0, 0, 0);
+      return created.getTime() === d.getTime();
     });
 
     const totalLoads = customersForDay?.reduce(
-      (sum: number, c: Customer) => sum + c.loads,
+      (sum: number, c: CustomerType) => sum + (c.loads || 0),
       0
     );
 

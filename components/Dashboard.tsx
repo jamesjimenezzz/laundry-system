@@ -34,40 +34,43 @@ const Dashboard = () => {
     {
       title: "Todays Customers",
       value: todayCustomers,
-      gradient: "from-blue-600 to-indigo-400",
+      gradient: "from-blue-600 to-indigo-300",
     },
     {
       title: "Todays Loads",
       value: todayLoads,
-      gradient: "from-teal-600 to-cyan-400",
+      gradient: "from-violet-600 to-indigo-300",
     },
     {
       title: "Gross Income",
       value: "₱" + " " + grossIncome,
-      gradient: "from-orange-500 to-red-300",
+      gradient: "from-green-600 to-green-300",
     },
 
     {
       title: "Waiting Orders",
       value: waitingOrders,
-      gradient: "from-yellow-500 to-amber-300",
+      gradient: "from-red-600 to-indigo-300",
     },
     {
       title: "On Process Orders",
       value: processingOrders,
-      gradient: "from-purple-500 to-pink-300",
+      gradient: "from-yellow-600 to-indigo-300",
     },
     {
       title: "Done Orders",
       value: doneOrders,
-      gradient: "from-emerald-600 to-green-400",
+      gradient: "from-cyan-600 to-indigo-300",
     },
   ];
 
   return (
     <div className="grid grid-cols-3 gap-6">
       {dashboardData.map((d, i) => (
-        <Card className={`bg-gradient-to-br ${d.gradient} py-10`} key={i}>
+        <Card
+          className={`bg-gradient-to-br ${d.gradient} py-10 shadow-md`}
+          key={i}
+        >
           <CardHeader>
             <CardTitle>
               <h1 className="text-2xl font-bold text-white">{d.title}</h1>
