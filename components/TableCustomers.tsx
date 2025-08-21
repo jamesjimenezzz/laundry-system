@@ -15,6 +15,15 @@ import { Pencil } from "lucide-react";
 import { Check } from "lucide-react";
 import { useDeleteCustomer } from "@/hooks/useCustomer";
 import { Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const TableCustomers = () => {
   const [editingId, setEditingId] = useState<null | string>(null);
@@ -35,7 +44,15 @@ const TableCustomers = () => {
   };
 
   const saveEdit = () => {
-    if (!editingId) {
+    if (
+      !editingId ||
+      !dataEdit.name?.trim() ||
+      !dataEdit.phone?.trim() ||
+      !dataEdit.status?.trim() ||
+      (dataEdit?.weight ?? 0) <= 0 ||
+      (dataEdit?.loads ?? 0) <= 0 ||
+      (dataEdit?.price ?? 0) <= 0
+    ) {
       return;
     }
 
@@ -107,7 +124,20 @@ const TableCustomers = () => {
                 <>
                   <TableCell className="text-center"> {d.name} </TableCell>
                   <TableCell className="text-center"> {d.phone} </TableCell>
-                  <TableCell className="text-center"> {d.status} </TableCell>
+                  <TableCell
+                    className={`text-center font-semibold ${
+                      d.status === "Waiting"
+                        ? `text-yellow-500`
+                        : d.status === "OnProcess"
+                        ? "text-blue-500"
+                        : d.status === "Done"
+                        ? "text-green-600"
+                        : ""
+                    }`}
+                  >
+                    {" "}
+                    {d.status === "OnProcess" ? "On Process" : d.status}{" "}
+                  </TableCell>
                   <TableCell className="text-center"> {d.weight} </TableCell>
                   <TableCell className="text-center"> {d.loads} </TableCell>
                   <TableCell className="text-center"> {d.price} </TableCell>
@@ -117,7 +147,7 @@ const TableCustomers = () => {
                   <TableCell className="text-center p-0">
                     {" "}
                     <input
-                      className="outline text-center "
+                      className="outline w-40 text-center "
                       defaultValue={d.name}
                       onChange={(e) =>
                         setDataEdit((s) => ({ ...s, name: e.target.value }))
@@ -128,7 +158,7 @@ const TableCustomers = () => {
                   <TableCell className="text-center">
                     {" "}
                     <input
-                      className="outline text-center "
+                      className="outline text-center  "
                       defaultValue={d.phone}
                       onChange={(e) =>
                         setDataEdit((s) => ({ ...s, phone: e.target.value }))
@@ -136,11 +166,42 @@ const TableCustomers = () => {
                       type="text"
                     />{" "}
                   </TableCell>
-                  <TableCell className="text-center"> editing </TableCell>
+                  <TableCell className="text-center">
+                    <Select
+                      onValueChange={(value: CustomerType["status"]) =>
+                        setDataEdit((s) => ({ ...s, status: value }))
+                      }
+                      defaultValue={`${d.status}`}
+                    >
+                      <SelectTrigger size="sm" className=" cursor-pointer">
+                        <SelectValue placeholder="Select Status"></SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Status</SelectLabel>
+                          <SelectItem
+                            className="cursor-pointer"
+                            value="Waiting"
+                          >
+                            Waiting
+                          </SelectItem>
+                          <SelectItem
+                            className="cursor-pointer"
+                            value="OnProcess"
+                          >
+                            On Process
+                          </SelectItem>
+                          <SelectItem className="cursor-pointer" value="Done">
+                            Done
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
                   <TableCell className="text-center">
                     {" "}
                     <input
-                      className="outline text-center "
+                      className="outline text-center w-24 "
                       defaultValue={d.weight}
                       onChange={(e) =>
                         setDataEdit((s) => ({
@@ -154,7 +215,7 @@ const TableCustomers = () => {
                   <TableCell className="text-center">
                     {" "}
                     <input
-                      className="outline text-center "
+                      className="outline text-center w-24 "
                       defaultValue={d.loads}
                       onChange={(e) =>
                         setDataEdit((s) => ({
@@ -165,10 +226,10 @@ const TableCustomers = () => {
                       type="number"
                     />{" "}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center ">
                     {" "}
                     <input
-                      className="outline text-center "
+                      className="outline text-center w-24"
                       defaultValue={d.price}
                       onChange={(e) =>
                         setDataEdit((s) => ({

@@ -18,24 +18,21 @@ import { useCustomers } from "@/hooks/useCustomer";
 
 const Analytics = () => {
   const [range, setRange] = useState<DateRange | undefined>();
-  const { data } = useCustomers(
-    range?.from && range?.to
-      ? {
-          start: `${range.from.toISOString()}`,
-          end: `${range.to.toISOString()}`,
-        }
-      : { preset: "today" }
-  );
+  const { data } =
+    useCustomers(
+      range?.from && range?.to
+        ? {
+            start: `${range.from.toISOString()}`,
+            end: `${range.to.toISOString()}`,
+          }
+        : { preset: "today" }
+    ) || 0;
 
   const dataTotalCustomers = data?.length;
-  const dataLoads = data?.reduce(
-    (acc: number, d: Customer) => acc + d.loads,
-    0
-  );
-  const dataIncome = data?.reduce(
-    (acc: number, d: Customer) => acc + d.price,
-    0
-  );
+  const dataLoads =
+    data?.reduce((acc: number, d: Customer) => acc + d.loads, 0) || 0;
+  const dataIncome =
+    data?.reduce((acc: number, d: Customer) => acc + d.price, 0) || 0;
 
   const analyzeCards = [
     {
