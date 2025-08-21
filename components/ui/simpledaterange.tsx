@@ -10,10 +10,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "./button";
+import { Filter } from "lucide-react";
 
-export default function SimpleDateRange() {
-  const [range, setRange] = useState<DateRange | undefined>();
+interface Props {
+  range: DateRange | undefined;
+  setRange: (value: DateRange | undefined) => void;
+}
 
+export default function SimpleDateRange({ range, setRange }: Props) {
   const handleToday = () => {
     const today = new Date();
 
@@ -37,10 +41,14 @@ export default function SimpleDateRange() {
   };
 
   return (
-    <>
+    <div className="flex  items-center gap-5 mb-5">
+      <div className="flex gap-3">
+        <Filter />
+        <p className="font-semibold">Filter Dates</p>
+      </div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button>
+          <Button variant={"outline"}>
             <CalendarIcon />
             {!range ? (
               "No selected dates"
@@ -72,7 +80,7 @@ export default function SimpleDateRange() {
               mode="range"
               numberOfMonths={1}
               selected={range}
-              onSelect={setRange}
+              onSelect={(r) => setRange(r)}
             />
             <div className="w-full flex flex-col gap-3 text-center">
               <Button onClick={handleToday} className="cursor-pointer">
@@ -88,6 +96,6 @@ export default function SimpleDateRange() {
           </div>
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 }

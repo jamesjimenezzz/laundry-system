@@ -71,7 +71,7 @@ const ChartLineLabel = () => {
   const endDate = dateData[dateData.length - 1].date;
 
   return (
-    <Card className="max-w-xl">
+    <Card className="max-w-2xl">
       <CardHeader>
         <CardTitle>Diko alam tatawag</CardTitle>
         <CardDescription>
