@@ -17,62 +17,90 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useCustomers } from "@/hooks/useCustomer";
+import { Customer } from "@prisma/client";
 
-export const description = "A multiple bar chart";
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
+export const description = "A bar chart";
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Gross",
     color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
-export function ChartBarMultiple() {
+export function ChartBarDefault() {
+  const { data } = useCustomers();
+  const today = new Date();
+  const lastDay = new Date();
+  lastDay.setDate(today.getDate() - 6);
+  const lastDayFixed = lastDay.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+  });
+  const todayFixed = today.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+  });
+
+  const chartData2 = () => {
+    const sevenDays = Array.from({ length: 7 }, (_, i) => {
+      const dayToDay = new Date();
+      dayToDay.setHours(0, 0, 0, 0);
+      dayToDay.setDate(today.getDate() - 6 + i);
+
+      const customerData = data?.filter((d: Customer) => {
+        const created = new Date(d.createdAt);
+        created.setHours(0, 0, 0, 0);
+        return created.getTime() === dayToDay.getTime();
+      });
+
+      return {
+        date: dayToDay.toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+        }),
+        gross: customerData.reduce(
+          (acc: number, d: Customer) => acc + d.price,
+          0
+        ),
+      };
+    });
+    return sevenDays;
+  };
+
   return (
-    <Card className="max-w-2xl">
+    <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Gross Income</CardTitle>
+        <CardDescription>
+          {lastDayFixed} - {todayFixed}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={chartData2()}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
-              tickMargin={10}
+              tickMargin={2}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="gross" fill="var(--color-desktop)" radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Current 7 Days <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Showing Gross Income for the current 7 days
         </div>
       </CardFooter>
     </Card>

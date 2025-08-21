@@ -12,7 +12,7 @@ import {
   CardDescription,
   CardContent,
 } from "./ui/card";
-import { ChartBarMultiple } from "./ui/chart-bar-multiple";
+import { ChartBarDefault } from "./ui/chart-bar-multiple";
 import SimpleDateRange from "./ui/simpledaterange";
 import { useCustomers } from "@/hooks/useCustomer";
 
@@ -79,7 +79,7 @@ const Analytics = () => {
       </div>
       <div className="grid grid-cols-2 gap-5 ">
         <ChartLineLabel />
-        <ChartBarMultiple />
+        <ChartBarDefault />
       </div>
     </div>
   );

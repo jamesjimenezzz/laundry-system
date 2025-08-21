@@ -73,7 +73,7 @@ const ChartLineLabel = () => {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>Diko alam tatawag</CardTitle>
+        <CardTitle>Customers & Loads</CardTitle>
         <CardDescription>
           {startDate} - {endDate}
         </CardDescription>
@@ -147,7 +147,7 @@ const ChartLineLabel = () => {
           Current 7 days
         </div>
         <div className="text-muted-foreground leading-none">
-          Analyze dito erp
+          Showing Customers & Loads for the current 7 days
         </div>
       </CardFooter>
     </Card>
